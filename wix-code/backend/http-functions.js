@@ -1,6 +1,6 @@
 import {ok, serverError, forbidden} from 'wix-http-functions';
 import wixData from 'wix-data';
-import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
 import PromiseQueue from 'promise-queue';
 import {mediaManager} from 'wix-media-backend';
 
@@ -34,7 +34,7 @@ export async function post_saveItemBatch(request) {
   const collection = payloadJson.collection;
   const items = payloadJson.data;
 
-  const hmac = crypto.createHmac('sha256', secret);
+  const hmac = CryptoJS.createHmac('sha256', secret);
   hmac.update(JSON.stringify(items, dateReplacer) + collection);
   if (hmac.digest('hex') !== payloadJson.signature) {
     return forbidden({body: 'invalid signature'});
